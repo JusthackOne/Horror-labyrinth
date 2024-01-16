@@ -1,6 +1,8 @@
 import "boxicons";
 import React, { useEffect, useRef, useState } from "react";
 import video from './assets/1.mp4'
+import music from './assets/2.m4a'
+import useSound from "use-sound";
 
 const Player = () => {
   const [position, setPosition] = useState({x: 192, y: 209})
@@ -9,6 +11,8 @@ const Player = () => {
   const videoRef = useRef()
   const bg = useRef()
   const game = useRef()
+
+  const [play, { pause, duration, sound }] = useSound(music);
 
   const [canMove, setCanMove] = useState(false)
 
@@ -128,17 +132,18 @@ const Player = () => {
   }, [position])
 
   const finish = () => {
-    bg.current.style.width = '100%'
-      bg.current.style.height = '100%'
-      game.current.style.display = 'none'
+    bg.current.style.width = '100%';
+      bg.current.style.height = '100%';
+      game.current.style.display = 'none';
 
-      videoRef.current.style.display = 'block'
-      videoRef.current.play()
+      videoRef.current.style.display = 'block';
+      play()
+      
    }
 
   return (
-    <div className="w-full h-full bg-slate-800 bg" onMouseMove={updatePosition} ref={bg}>
-      <video className="hidden w-auto h-full mx-auto z-30" autoPlay muted ref={videoRef} onMouseOver={() => videoRef.current.muted = false}>
+    <div className="w-full h-full bg-slate-800 bg"  onMouseMove={updatePosition} ref={bg}>
+      <video className="hidden w-auto h-full mx-auto z-30" autoPlay muted ref={videoRef}>
         <source src={video} type="video/mp4"/>
         
       </video>
