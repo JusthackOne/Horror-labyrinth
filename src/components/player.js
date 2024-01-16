@@ -1,18 +1,22 @@
 import "boxicons";
 import React, { useEffect, useRef, useState } from "react";
-import video from './assets/video.mp4'
+import video from './assets/1.mp4'
 
 const Player = () => {
   const [position, setPosition] = useState({x: 192, y: 209})
   const person = useRef()
   const block = useRef()
   const videoRef = useRef()
+  const bg = useRef()
+  const game = useRef()
+
   const [canMove, setCanMove] = useState(false)
 
 
   useEffect(() => {
     person.current.style.left = `170px`;
       person.current.style.top = `206px`;  
+
       
   }, [])
   
@@ -64,7 +68,7 @@ const Player = () => {
       const windowHeight = window.innerHeight;
 
       // Задаем порог для прокрутки
-      const threshold = 200;
+      const threshold = 100;
       // Проверяем, если курсор мыши приблизился к границам окна, прокручиваем страницу
       if (mouseX < threshold) {
         window.scrollBy(-5, 0);
@@ -92,15 +96,53 @@ const Player = () => {
     };
   }, [position]);
 
+  useEffect(() => {
+    const elements = document.querySelectorAll('.playScreamer'); // получаем все элементы с классом 'element'
 
+    if (canMove) {
+      person.current.style.left = `${position.x+window.scrollX-24}px`;
+      person.current.style.top = `${position.y+window.scrollY-24}px`;  
+    }
+
+    
+     const personIten = person.current.getBoundingClientRect();
+
+     for (let i = 0; i < elements.length; i++) {
+      const blockItem = elements[i].getBoundingClientRect();
+      if (
+        personIten.left < blockItem.right &&
+        personIten.right > blockItem.left &&
+        personIten.top < blockItem.bottom &&
+        personIten.bottom > blockItem.top
+      ) {
+        finish()
+      
+      } else {
+       
+      }
+     }
+
+     
+     
+    
+  }, [position])
+
+  const finish = () => {
+    bg.current.style.width = '100%'
+      bg.current.style.height = '100%'
+      game.current.style.display = 'none'
+
+      videoRef.current.style.display = 'block'
+      videoRef.current.play()
+   }
 
   return (
-    <div className="w-full h-full bg-slate-800 bg" onMouseMove={updatePosition}>
-      <video width="1000" height="1000" className="hidden" autoPlay muted ref={videoRef}>
-        <source src={video} type="video/mp4" />
+    <div className="w-full h-full bg-slate-800 bg" onMouseMove={updatePosition} ref={bg}>
+      <video className="hidden w-auto h-full mx-auto z-30" autoPlay muted ref={videoRef} onMouseOver={() => videoRef.current.muted = false}>
+        <source src={video} type="video/mp4"/>
         
       </video>
-      <div className="">
+      <div className="" ref={game}>
       <div className="person w-12 h-12 absolute top-0 left-0 z-10" ref={person} onMouseOver={() => setCanMove(true)} onMouseLeave={() => setCanMove(false)}></div>
 
 
@@ -116,7 +158,7 @@ const Player = () => {
       <div className="element  bg-blue-900 w-20 absolute right-48 h-2/3 top-46"></div>
       <div className="element  bg-blue-900 w-20 absolute right-48 h-48 bottom-0"></div>
       <div className="element  bg-blue-900 w-28 absolute right-0 h-full bottom-0"></div>
-      <div className="playScreamer  bg-red-900 w-10 absolute right-32 h-10 top-48" onClick={() => videoRef.current.muted = false}></div>
+      <div className="playScreamer  bg-red-900 w-10 absolute right-32 h-10 top-48"></div>
       </div>
       
     </div>
