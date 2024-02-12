@@ -11,9 +11,6 @@ This is small app where you shoud finish game in red squer. Warning! Screamer!
 - Run `npm i` to install node modules.
 - Run `npm start` to start the client server.
 
-Configure your `server/.env` with the respective data.
-Configure your `client/.env` with the respective data.
-
 ## Some Snapshots 📸
 
 ### Game
